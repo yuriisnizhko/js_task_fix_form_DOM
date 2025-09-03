@@ -1,26 +1,30 @@
 'use strict';
 
-const allInputs = document.querySelectorAll('input');
+const forms = document.querySelectorAll('form');
+let idCounter = 1;
 
-for (const input of allInputs) {
-  const labelElement = document.createElement('label');
+forms.forEach((form) => {
+  const allInputs = form.querySelectorAll('input');
 
-  labelElement.className = 'field-label';
+  for (const input of allInputs) {
+    const labelElement = document.createElement('label');
 
-  if (input.id) {
+    labelElement.className = 'field-label';
+
+    if (!input.id) {
+      input.id = `input-id-${idCounter++}`;
+    }
     labelElement.setAttribute('for', input.id);
+
+    if (input.name) {
+      labelElement.textContent = input.name;
+
+      const placeholderValue =
+        input.name.charAt(0).toUpperCase() + input.name.slice(1);
+
+      input.setAttribute('placeholder', placeholderValue);
+    }
+
+    input.parentElement.appendChild(labelElement);
   }
-
-  if (input.name) {
-    labelElement.textContent = input.name;
-
-    const placeholderValue =
-      input.name.charAt(0).toUpperCase() + input.name.slice(1);
-
-    input.setAttribute('placeholder', placeholderValue);
-  }
-
-  if (labelElement) {
-    input.before(labelElement);
-  }
-}
+});
