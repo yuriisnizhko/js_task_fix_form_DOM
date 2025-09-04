@@ -16,15 +16,33 @@ forms.forEach((form) => {
     }
     labelElement.setAttribute('for', input.id);
 
+    if (!input.name) {
+      continue;
+    }
+
     if (input.name) {
-      labelElement.textContent = input.name;
+      labelElement.textContent = humanizeText(input.name);
 
-      const placeholderValue =
-        input.name.charAt(0).toUpperCase() + input.name.slice(1);
+      if (!input.hasAttribute('placeholder') || input.placeholder === '') {
+        const placeholderValue = humanizeText(
+          input.name.charAt(0).toUpperCase() + input.name.slice(1),
+        );
 
-      input.setAttribute('placeholder', placeholderValue);
+        input.setAttribute('placeholder', placeholderValue);
+      }
+    }
+
+    if (
+      input.id &&
+      input.parentElement.querySelector('label[for="' + input.id + '"]')
+    ) {
+      continue;
     }
 
     input.parentElement.appendChild(labelElement);
   }
 });
+
+function humanizeText(str) {
+  return str.replace(/([A-Z])/g, ' $1').trim();
+}
